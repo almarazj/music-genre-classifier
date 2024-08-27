@@ -138,7 +138,7 @@ class MusicGenreClassifier:
 
         # save
         plt.tight_layout()
-        plt.savefig('results/training_metrics.png')
+        plt.savefig('challenge\\results\\training_metrics.png')
         plt.show()
 
 if __name__ == '__main__':
@@ -150,10 +150,10 @@ if __name__ == '__main__':
                                     test_loader=test_loader,
                                     n_epochs=300)
 
-    if not os.path.exists('results'):
-        os.makedirs('results') 
+    if not os.path.exists('challenge\\results'):
+        os.makedirs('challenge\\results') 
     
-    torch.save(model.state_dict(), 'results/music_genre_classifier.pth')
+    torch.save(model.state_dict(), 'challenge\\results\\music_genre_classifier.pth')
     
     # Train the model
     classifier.train()

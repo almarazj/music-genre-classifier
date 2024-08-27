@@ -137,7 +137,7 @@ if __name__ == '__main__':
 
     # Load the model
     cnn = CNN(input_shape=(1, 128, 130))
-    state_dict = torch.load('results/music_genre_classifier.pth')
+    state_dict = torch.load('challenge\\results\\music_genre_classifier.pth', map_location=torch.device('cpu'))
     cnn.load_state_dict(state_dict)                        
     
     class_mapping = dataset.genres_map
