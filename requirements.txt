@@ -1,0 +1,7 @@
+librosa==0.10.2.post1
+matplotlib==3.9.2
+natsort==8.4.0
+numpy==2.1.0
+torch==2.4.0
+torchaudio==2.4.0
+tqdm==4.66.5
