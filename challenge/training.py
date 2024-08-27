@@ -23,12 +23,16 @@ class MusicGenreClassifier:
         self.model.to(self.device)
 
         self.train_losses = []
+        self.train_accuracies = []
         self.val_losses = []
         self.val_accuracies = []
     
     def train_one_epoch(self):
         self.model.train()
         running_loss = 0.0
+        correct = 0
+        total = 0
+        
         with tqdm(total=len(self.train_loader), desc="Training Epoch", leave=False) as pbar:
             for inputs, labels in self.train_loader:
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
@@ -41,9 +45,14 @@ class MusicGenreClassifier:
                 
                 running_loss += loss.item()
                 
+                _, predicted = torch.max(outputs.data, 1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
+                
                 pbar.update(1)
-        
-        return running_loss / len(self.train_loader)
+                
+        accuracy = 100 * correct / total
+        return running_loss / len(self.train_loader), accuracy
     
     def validate(self):
         self.model.eval()
@@ -88,14 +97,15 @@ class MusicGenreClassifier:
     def train(self):
         with tqdm(total=self.n_epochs, desc="Training model") as epoch_pbar:
             for epoch in range(self.n_epochs):
-                train_loss = self.train_one_epoch()
+                train_loss, train_accuracy = self.train_one_epoch()
                 val_loss, val_accuracy = self.validate()
 
                 self.train_losses.append(train_loss)
+                self.train_accuracies.append(train_accuracy)
                 self.val_losses.append(val_loss)
                 self.val_accuracies.append(val_accuracy)
 
-                print(f'Epoch [{epoch+1}/{self.n_epochs}], Train Loss: {train_loss:.4f}, Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_accuracy:.2f}%')
+                print(f'Epoch [{epoch+1}/{self.n_epochs}], Train Loss: {train_loss:.4f}, Train Accuracy: {train_accuracy:.2f}%, Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_accuracy:.2f}%')
                 epoch_pbar.update(1)
 
         test_loss, test_accuracy = self.test()
@@ -119,6 +129,7 @@ class MusicGenreClassifier:
 
         # Accuracy plot
         plt.subplot(1, 2, 2)
+        plt.plot(epochs, self.train_accuracies, label='Train Accuracy')
         plt.plot(epochs, self.val_accuracies, label='Validation Accuracy')
         plt.xlabel('Epochs')
         plt.ylabel('Accuracy (%)')
