@@ -1,0 +1,9 @@
+dataset/*
+__pycache__/
+/.vscode/
+songs/
+
+test*
+
+#Exceptions
+!dataset/get_dataset.md
