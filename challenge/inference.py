@@ -6,8 +6,6 @@ import librosa
 from preprocessing import split_audio
 from models.cnn import CNN
 import data_managment.dataset as dataset
-import matplotlib.pyplot as plt
-from matplotlib.colors import Normalize
 
 def convert_mp3_to_wav(mp3_folder: str, wav_folder: str, target_sample_rate: int) -> None:
     """
@@ -76,7 +74,7 @@ def preprocess_file(file_path: str,
     expected_segment_length = sr * segment_length
     spectrograms = []
 
-    for i, segment in enumerate(segments):
+    for segment in segments:
         segment = librosa.util.fix_length(segment, size=expected_segment_length)
         
         S = librosa.feature.melspectrogram(y=segment, sr=sr, n_fft=n_fft, 
@@ -90,7 +88,7 @@ def preprocess_file(file_path: str,
 
     spectrograms_tensors = []
     for spectrogram in spectrograms:       
-        tensor = torch.from_numpy(spectrogram).unsqueeze(0) # Pytorch tensor (1, H, W)
+        tensor = torch.from_numpy(spectrogram).float().unsqueeze(0) # Pytorch tensor (1, H, W)
         tensor = tensor.unsqueeze(0) # Pytorch tensor (1, 1, H, W)
         spectrograms_tensors.append(tensor)
         
