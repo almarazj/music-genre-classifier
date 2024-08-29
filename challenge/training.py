@@ -117,7 +117,7 @@ class MusicGenreClassifier:
         epochs = range(1, self.n_epochs + 1)
 
         plt.figure(figsize=(14, 5))
-
+        plt.title('Train and Validation Accuracy')
         # Loss plot
         plt.subplot(1, 2, 1)
         plt.plot(epochs, self.train_losses, label='Train Loss')
@@ -152,8 +152,9 @@ if __name__ == '__main__':
 
     if not os.path.exists('challenge\\results'):
         os.makedirs('challenge\\results') 
-    
-    torch.save(model.state_dict(), 'challenge\\results\\music_genre_classifier.pth')
-    
+        
     # Train the model
     classifier.train()
+    # Save trained model
+    torch.save(model.state_dict(), 'challenge\\results\\music_genre_classifier.pth')
+    
